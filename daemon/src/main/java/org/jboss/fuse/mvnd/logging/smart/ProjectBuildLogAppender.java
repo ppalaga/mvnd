@@ -25,14 +25,13 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import org.apache.maven.shared.utils.logging.LoggerLevelRenderer;
 import org.apache.maven.shared.utils.logging.MessageUtils;
-import org.jboss.fuse.mvnd.logging.internal.SLF4J;
 
 /**
  * This Maven-specific appender outputs project build log messages
  * to the smart logging system.
  */
-public class ProjectBuildLogAppender extends AppenderBase<ILoggingEvent>
-        implements SLF4J.LifecycleListener {
+public class ProjectBuildLogAppender extends AppenderBase<ILoggingEvent> {
+    public static final String KEY_PROJECT_ID = "maven.project.id";
 
     private String pattern;
     private PatternLayout layout;
@@ -56,7 +55,7 @@ public class ProjectBuildLogAppender extends AppenderBase<ILoggingEvent>
     @Override
     protected void append(ILoggingEvent event) {
         Map<String, String> mdc = event.getMDCPropertyMap();
-        String projectId = mdc != null ? mdc.get(SLF4J.KEY_PROJECT_ID) : null;
+        String projectId = mdc != null ? mdc.get(KEY_PROJECT_ID) : null;
         AbstractLoggingSpy.instance().append(projectId, layout.doLayout(event));
     }
 
